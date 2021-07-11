@@ -1,0 +1,4 @@
+test1: 你好世界
+test2:
+  - type: actionbar
+    text: 你好 {0}!

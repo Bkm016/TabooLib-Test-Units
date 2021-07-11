@@ -1,0 +1,4 @@
+test1: Hello World!
+test2:
+  - type: actionbar
+    text: Hello {0}!
