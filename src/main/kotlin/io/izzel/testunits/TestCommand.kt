@@ -1,103 +1,135 @@
 package io.izzel.testunits
 
+import io.izzel.testunits.platform.entities
+import io.izzel.testunits.platform.entityNearly
+import io.izzel.testunits.platform.teleport
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
-import taboolib.common.platform.Awake
-import taboolib.common.platform.PermissionDefault
-import taboolib.common.platform.command
-import taboolib.common.platform.onlinePlayers
-import taboolib.module.kether.*
-import taboolib.module.lang.sendLang
+import taboolib.common.platform.*
 import taboolib.module.nms.createLight
 import taboolib.module.nms.deleteLight
 import taboolib.module.nms.getItemTag
-import java.lang.Exception
+import java.io.File
+import java.util.*
 
 object TestCommand {
 
     @Awake(LifeCycle.ENABLE)
     fun c() {
-        command("test") {
-            execute {
-                sender.sendMessage("test")
-            }
-        }
-        command("test1") {
-            literal("demo1") {
-                execute {
-                    sender.sendMessage("online players: ${onlinePlayers().map { it.name }}, your name ${sender.name}")
-                }
-            }
-            required {
-                complete {
-                    (1..10).map { it.toString() }
-                }
-                restrict {
-                    isInt()
-                }
-                execute {
-                    sender.sendMessage("your num is $argument")
-                }
-            }
-        }
-        command("test2", aliases = emptyList(), permissionDefault = PermissionDefault.TRUE) {
-            literal("demo1") {
-                literal("demo2") {
-                    literal("demo3") {
-                        execute {
-                            sender.sendMessage("demo3")
-                        }
-                    }
-                    optional {
-                        complete {
-                            (1..10).map { it.toString() }
-                        }
-                        restrict {
-                            isInt()
-                        }
-                        execute {
-                            sender.sendMessage("your num is $argument")
-                        }
-                    }
-                }
-                optional {
-                    execute {
-                        sender.sendMessage(argument)
-                    }
-                }
-            }
-        }
-        command("test3") {
-            literal("kether") {
-                execute {
-                    try {
-                        sender.sendMessage(KetherFunction.parse("your name is {{ sender }}", sender = sender))
-                        KetherShell.eval("tell *HelloWorld!", sender = sender)
-                    } catch (ex: Exception) {
-                        ex.printKetherErrorMessage()
-                    }
-                }
-            }
-            literal("lang") {
-                execute {
-                    sender.sendLang("test1")
-                    sender.sendLang("test2", sender.name)
-                }
-            }
+        command("nms") {
             literal("nbt") {
-                execute {
-                    sender.sendMessage("your item nbt is ${(sender.origin as Player).itemInHand.getItemTag()}")
+                execute { context, _ ->
+                    context.sender.sendMessage("your item nbt is ${context.sender.cast<Player>().itemInHand.getItemTag()}")
                 }
             }
             literal("light") {
                 literal("create") {
-                    execute {
-                        (sender.origin as Player).location.block.createLight(15)
+                    execute { context, _ ->
+                        context.sender.cast<Player>().location.block.createLight(15)
                     }
                 }
                 literal("delete") {
-                    execute {
-                        (sender.origin as Player).location.block.deleteLight()
+                    execute { context, _ ->
+                        context.sender.cast<Player>().location.block.deleteLight()
+                    }
+                }
+            }
+        }
+        // entityTo <uuid>
+        command("entityTo") {
+            literal("random") {
+                execute { context, _ ->
+                    if (context.sender is ProxyPlayer) {
+                        val entityRandom = (context.sender as ProxyPlayer).entities().randomOrNull()
+                        if (entityRandom == null) {
+                            context.sender.sendMessage("No Entity")
+                        } else {
+                            (context.sender as ProxyPlayer).teleport(entityRandom)
+                        }
+                    } else {
+                        context.sender.sendMessage("Not Player")
+                    }
+                }
+            }
+            dynamic(optional = true) {
+                suggestion {
+                    (it.sender as? ProxyPlayer)?.entities()?.map { it.toString() }
+                }
+                execute { context, argument ->
+                    if (context.sender is ProxyPlayer) {
+                        try {
+                            (context.sender as ProxyPlayer).teleport(UUID.fromString(argument))
+                        } catch (ex: IllegalArgumentException) {
+                            context.sender.sendMessage("Invalid UUID: [${argument}]")
+                        }
+                    } else {
+                        context.sender.sendMessage("Not Player")
+                    }
+                }
+            }
+            execute { context, _ ->
+                if (context.sender is ProxyPlayer) {
+                    val entityNearly = (context.sender as ProxyPlayer).entityNearly()
+                    if (entityNearly == null) {
+                        context.sender.sendMessage("No Entity")
+                    } else {
+                        (context.sender as ProxyPlayer).teleport(entityNearly)
+                    }
+                } else {
+                    context.sender.sendMessage("Not Player")
+                }
+            }
+        }
+        command("entityTo2") {
+            literal("do") {
+                literal("random") {
+                    execute { context, _ ->
+                        if (context.sender is ProxyPlayer) {
+                            val entityRandom = (context.sender as ProxyPlayer).entities().randomOrNull()
+                            if (entityRandom == null) {
+                                context.sender.sendMessage("No Entity")
+                            } else {
+                                (context.sender as ProxyPlayer).teleport(entityRandom)
+                            }
+                        } else {
+                            context.sender.sendMessage("Not Player")
+                        }
+                    }
+                }
+                dynamic(optional = true) {
+                    suggestion {
+                        (it.sender as? ProxyPlayer)?.entities()?.map { it.toString() }
+                    }
+                    restrict { context, argument ->
+                        try {
+                            UUID.fromString(argument)
+                            true
+                        } catch (ex: Exception) {
+                            false
+                        }
+                    }
+                    execute { context, argument ->
+                        if (context.sender is ProxyPlayer) {
+                            try {
+                                (context.sender as ProxyPlayer).teleport(UUID.fromString(argument))
+                            } catch (ex: IllegalArgumentException) {
+                                context.sender.sendMessage("Invalid UUID")
+                            }
+                        } else {
+                            context.sender.sendMessage("Not Player")
+                        }
+                    }
+                }
+                execute { context, _ ->
+                    if (context.sender is ProxyPlayer) {
+                        val entityNearly = (context.sender as ProxyPlayer).entityNearly()
+                        if (entityNearly == null) {
+                            context.sender.sendMessage("No Entity")
+                        } else {
+                            (context.sender as ProxyPlayer).teleport(entityNearly)
+                        }
+                    } else {
+                        context.sender.sendMessage("Not Player")
                     }
                 }
             }

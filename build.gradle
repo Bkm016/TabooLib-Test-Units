@@ -31,7 +31,7 @@ taboolib {
             name 'CziSky' description 'TabooLib Developer'
         }
         dependencies {
-            name 'Adyeshach'
+            name 'Adyeshach' optional true
             name 'Chemdah' with 'bukkit' optional true
             name 'spongeapi' version '7.2.0' with 'sponge7'
             name 'spongeapi' version '8.0.0' with 'sponge8' loadafter true
@@ -49,9 +49,9 @@ taboolib {
     install 'module-porticus'
     install 'module-navigation'
     install 'module-configuration'
-    install 'platform-bukkit', 'platform-bungee', 'platform-nukkit', 'platform-sponge', 'platform-velocity'
+    install 'platform-bukkit', 'platform-bungee', 'platform-nukkit', 'platform-velocity'
     install 'platform-sponge-api7', 'platform-sponge-api8'
-    version 'test-600-9'
+    version '6.0.0-es1'
 }
 
 repositories {
