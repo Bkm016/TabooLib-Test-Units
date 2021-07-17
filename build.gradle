@@ -1,22 +1,22 @@
-buildscript {
-    repositories {
-        maven {
-            url uri("/Users/sky/Desktop/repo")
-        }
-    }
-    dependencies {
-        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.7'
-    }
-}
+//buildscript {
+//    repositories {
+//        maven {
+//            url uri("/Users/sky/Desktop/repo")
+//        }
+//    }
+//    dependencies {
+//        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.7'
+//    }
+//}
 
 plugins {
     id 'java'
     id 'maven'
-//    id 'io.izzel.taboolib' version '1.4'
+    id 'io.izzel.taboolib' version '1.8'
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 }
 
-apply plugin: 'io.izzel.taboolib'
+//apply plugin: 'io.izzel.taboolib'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
