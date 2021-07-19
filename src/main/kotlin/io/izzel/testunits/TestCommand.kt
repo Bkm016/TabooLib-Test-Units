@@ -9,7 +9,8 @@ import taboolib.common.platform.*
 import taboolib.module.nms.createLight
 import taboolib.module.nms.deleteLight
 import taboolib.module.nms.getItemTag
-import java.io.File
+import taboolib.module.nms.sendScoreboard
+import taboolib.module.nms.type.LightType
 import java.util.*
 
 object TestCommand {
@@ -25,12 +26,28 @@ object TestCommand {
             literal("light") {
                 literal("create") {
                     execute { context, _ ->
-                        context.sender.cast<Player>().location.block.createLight(15)
+                        context.sender.cast<Player>().location.block.createLight(15, LightType.BLOCK)
                     }
                 }
                 literal("delete") {
                     execute { context, _ ->
-                        context.sender.cast<Player>().location.block.deleteLight()
+                        context.sender.cast<Player>().location.block.deleteLight(LightType.BLOCK)
+                    }
+                }
+            }
+            literal("scoreboard") {
+                dynamic(optional = true) {
+                    execute { context, argument ->
+                        if (context.sender is ProxyPlayer) {
+                            context.sender.sendMessage("scoreboard set")
+                            context.sender.cast<Player>().sendScoreboard(*argument.split(' ').toTypedArray())
+                        }
+                    }
+                }
+                execute { context, _ ->
+                    if (context.sender is ProxyPlayer) {
+                        context.sender.sendMessage("scoreboard unset")
+                        context.sender.cast<Player>().sendScoreboard()
                     }
                 }
             }

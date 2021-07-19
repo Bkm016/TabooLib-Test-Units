@@ -8,6 +8,7 @@ import taboolib.common.reflect.Reflex.Companion.reflex
 import taboolib.common5.util.compileJS
 import taboolib.module.chat.TellrawJson
 import taboolib.module.chat.colored
+import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.PacketSendEvent
 import taboolib.module.nms.sendScoreboard
 import taboolib.module.nms.sendToast
@@ -30,8 +31,11 @@ object TestListener {
         try {
             e.player.sendMessage("Console: ${Bukkit.getServer().reflex<Any>("console")}")
             e.player.sendMessage("Recent TPS: ${Bukkit.getServer().reflex<Any>("console")!!.reflex<DoubleArray>("recentTps")!![0]}")
-            e.player.sendMessage("Player Ping: ${e.player.ping}")
-            e.player.sendMessage("Player Connection: ${e.player.reflex<Any>("entity/connection")}")
+            if (MinecraftVersion.isUniversal) {
+                e.player.sendMessage("Player Connection: ${e.player.reflex<Any>("entity/connection")}")
+            } else {
+                e.player.sendMessage("Player Connection: ${e.player.reflex<Any>("entity/playerConnection")}")
+            }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
@@ -51,18 +55,18 @@ object TestListener {
             ex.printStackTrace()
         }
         e.player.sendScoreboard("123", "456")
-        submit(delay = 20) {
-            e.player.sendScoreboard("456", "123")
-            e.player.sendToast(Material.STONE, "测试")
+        if (MinecraftVersion.isUniversal) {
+            submit(delay = 20) {
+                e.player.sendScoreboard("456", "123")
+                e.player.sendToast(Material.STONE, "测试")
+            }
         }
     }
 
     @SubscribeEvent
     fun e(e: PacketSendEvent) {
-        if (e.packet.name == "PacketPlayOutChat") {
-//            info(e.packet.read("a"))
-//            info(e.packet.read("components"))
-//            info(e.packet.read("b"))
+        if (e.packet.name == "PacketPlayInChat") {
+            info("client chat [${e.packet.read<Any>("a")}]")
         }
     }
 }

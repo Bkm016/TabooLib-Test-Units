@@ -1,22 +1,22 @@
-//buildscript {
-//    repositories {
-//        maven {
-//            url uri("/Users/sky/Desktop/repo")
-//        }
-//    }
-//    dependencies {
-//        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.7'
-//    }
-//}
+buildscript {
+    repositories {
+        maven {
+            url uri("/Users/sky/Desktop/repo")
+        }
+    }
+    dependencies {
+        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.8'
+    }
+}
 
 plugins {
     id 'java'
     id 'maven'
-    id 'io.izzel.taboolib' version '1.8'
+//    id 'io.izzel.taboolib' version '1.8'
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 }
 
-//apply plugin: 'io.izzel.taboolib'
+apply plugin: 'io.izzel.taboolib'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,10 +40,13 @@ taboolib {
     }
     install 'common'
     install 'common-5'
+    install 'module-ai'
+    install 'module-ui'
     install 'module-nms'
     install 'module-nms-util'
     install 'module-chat'
     install 'module-lang'
+    install 'module-effect'
     install 'module-kether'
     install 'module-database'
     install 'module-porticus'
