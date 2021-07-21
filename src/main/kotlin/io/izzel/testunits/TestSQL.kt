@@ -87,7 +87,7 @@ object TestSQL {
         fun getDate(user: String): String? {
             return table.workspace(dataSource) {
                 select { where { "user" eq user } }
-            }.first {
+            }.firstOrNull {
                 getString("data")
             }
         }
