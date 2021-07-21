@@ -6,3 +6,10 @@ demo4: 4
 demo5:
   # demo6
   demo6: 56
+
+database:
+  host: ~
+  port: 3306
+  root: root
+  password: root
+  database: minecraft

@@ -34,7 +34,6 @@ object TestBookBuilder {
         val stone = buildItem(XMaterial.STONE) {
             name = "123"
         }
-
         println(book.getItemTag())
         println(TellrawJson().append("123").hoverItem(stone.getInternalKey(), stone.getItemTag().toString()).toRawMessage())
     }
