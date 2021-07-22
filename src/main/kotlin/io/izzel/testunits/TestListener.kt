@@ -37,6 +37,7 @@ object TestListener {
             ex.printStackTrace()
         }
         try {
+            //fixme java.lang.NoClassDefFoundError: org/openjdk/nashorn/api/scripting/NashornScriptEngineFactory (估计是导入的包是用 Java16 编译的)
             e.player.sendMessage("Script Eval ${"1 + 1".compileJS()!!.eval()}")
         } catch (ex: Exception) {
             ex.printStackTrace()
