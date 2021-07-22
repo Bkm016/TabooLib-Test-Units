@@ -1,11 +1,12 @@
 buildscript {
     repositories {
-        maven {
-            url uri("/Users/sky/Desktop/repo")
-        }
+//        maven {
+//            url uri("/Users/sky/Desktop/repo")
+//        }
+        mavenLocal()
     }
     dependencies {
-        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.8'
+        classpath 'io.izzel.taboolib:taboolib-gradle-plugin:1.9'
     }
 }
 
@@ -58,14 +59,16 @@ taboolib {
 }
 
 repositories {
-    maven {
-        url uri("/Users/sky/Desktop/repo")
-    }
+//    maven {
+//        url uri("/Users/sky/Desktop/repo")
+//    }
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
     implementation 'ink.ptms.core:v11605:11605'
+    implementation 'ink.ptms.core:v11700:11700'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     implementation fileTree(dir: 'libs', includes: ['*.jar'])
 }

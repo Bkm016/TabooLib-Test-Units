@@ -6,10 +6,7 @@ import io.izzel.testunits.platform.teleport
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.*
-import taboolib.module.nms.createLight
-import taboolib.module.nms.deleteLight
-import taboolib.module.nms.getItemTag
-import taboolib.module.nms.sendScoreboard
+import taboolib.module.nms.*
 import taboolib.module.nms.type.LightType
 import java.util.*
 
