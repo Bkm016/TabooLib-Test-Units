@@ -66,11 +66,4 @@ object TestListener {
             info("client chat [${e.packet.read<Any>("a")}]")
         }
     }
-
-    val nms = nmsProxy<TestNMS>()
-
-    @SubscribeEvent
-    fun onPacketReceive(e: PacketSendEvent) {
-        e.isCancelled = !nms.handlePacket(e.player, e.packet)
-    }
 }
