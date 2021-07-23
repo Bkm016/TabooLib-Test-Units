@@ -17,6 +17,7 @@ import java.lang.Exception
  * @author sky
  * @since 2021/7/21 2:44 下午
  */
+//fixme java.lang.InternalError: Malformed class name
 object TestSQL {
 
     @Awake(LifeCycle.ENABLE)

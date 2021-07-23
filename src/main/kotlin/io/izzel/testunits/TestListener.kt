@@ -4,14 +4,11 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.player.PlayerJoinEvent
 import taboolib.common.platform.*
-import taboolib.common.reflect.Reflex.Companion.reflex
-import taboolib.common5.util.compileJS
+import taboolib.common.reflect.Reflex.Companion.getProperty
+import taboolib.common5.compileJS
 import taboolib.module.chat.TellrawJson
 import taboolib.module.chat.colored
-import taboolib.module.nms.MinecraftVersion
-import taboolib.module.nms.PacketSendEvent
-import taboolib.module.nms.sendScoreboard
-import taboolib.module.nms.sendToast
+import taboolib.module.nms.*
 
 @PlatformSide([Platform.BUKKIT])
 object TestListener {
@@ -29,17 +26,18 @@ object TestListener {
     fun e(e: TestEvent) {
         e.player.sendMessage("Player Test")
         try {
-            e.player.sendMessage("Console: ${Bukkit.getServer().reflex<Any>("console")}")
-            e.player.sendMessage("Recent TPS: ${Bukkit.getServer().reflex<Any>("console")!!.reflex<DoubleArray>("recentTps")!![0]}")
+            e.player.sendMessage("Console: ${Bukkit.getServer().getProperty<Any>("console")}")
+            e.player.sendMessage("Recent TPS: ${Bukkit.getServer().getProperty<Any>("console")!!.getProperty<DoubleArray>("recentTps")!![0]}")
             if (MinecraftVersion.isUniversal) {
-                e.player.sendMessage("Player Connection: ${e.player.reflex<Any>("entity/connection")}")
+                e.player.sendMessage("Player Connection: ${e.player.getProperty<Any>("entity/connection")}")
             } else {
-                e.player.sendMessage("Player Connection: ${e.player.reflex<Any>("entity/playerConnection")}")
+                e.player.sendMessage("Player Connection: ${e.player.getProperty<Any>("entity/playerConnection")}")
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
         try {
+            //fixme java.lang.NoClassDefFoundError: org/openjdk/nashorn/api/scripting/NashornScriptEngineFactory (估计是导入的包是用 Java16 编译的)
             e.player.sendMessage("Script Eval ${"1 + 1".compileJS()!!.eval()}")
         } catch (ex: Exception) {
             ex.printStackTrace()
